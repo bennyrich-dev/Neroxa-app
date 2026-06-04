@@ -1,0 +1,367 @@
+openapi: 3.1.0
+info:
+  title: Api
+  version: 0.1.0
+  description: Nexora Streaming Platform API
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: content
+    description: Streaming content
+  - name: genres
+    description: Content genres
+  - name: search
+    description: Search
+  - name: watchlist
+    description: User watchlist
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+
+  /content:
+    get:
+      operationId: listContent
+      tags: [content]
+      summary: List all content
+      parameters:
+        - name: genre
+          in: query
+          schema:
+            type: string
+        - name: type
+          in: query
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of content
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Content"
+
+  /content/featured:
+    get:
+      operationId: getFeaturedContent
+      tags: [content]
+      summary: Get featured/hero content
+      responses:
+        "200":
+          description: Featured content list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Content"
+
+  /content/trending:
+    get:
+      operationId: getTrendingContent
+      tags: [content]
+      summary: Get trending content
+      responses:
+        "200":
+          description: Trending content list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Content"
+
+  /content/new-releases:
+    get:
+      operationId: getNewReleases
+      tags: [content]
+      summary: Get new releases
+      responses:
+        "200":
+          description: New releases list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Content"
+
+  /content/{id}:
+    get:
+      operationId: getContent
+      tags: [content]
+      summary: Get specific content by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Content item
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Content"
+        "404":
+          description: Not found
+
+  /content/{id}/recommendations:
+    get:
+      operationId: getRecommendations
+      tags: [content]
+      summary: Get recommendations for content
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Recommended content
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Content"
+
+  /content/{id}/stream:
+    get:
+      operationId: getContentStream
+      tags: [content]
+      summary: Get live streaming sources for a specific title (Movies, Anime, Sports, WWE)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Dynamic video streaming sources resolved by Neroxa Engine
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [provider, sources]
+                properties:
+                  provider:
+                    type: string
+                  sources:
+                    type: array
+                    items:
+                      type: object
+                      required: [url, quality, isM3U8]
+                      properties:
+                        url:
+                          type: string
+                          description: The direct master .m3u8 adaptive stream URL
+                        quality:
+                          type: string
+                          description: auto, 1080p, 720p, 360p
+                        isM3U8:
+                          type: boolean
+        "404":
+          description: Content stream sources not found
+
+  /genres:
+    get:
+      operationId: listGenres
+      tags: [genres]
+      summary: List all genres
+      responses:
+        "200":
+          description: List of genres
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Genre"
+
+  /search:
+    get:
+      operationId: searchContent
+      tags: [search]
+      summary: Search content
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Search results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SearchResult"
+
+  /watchlist:
+    get:
+      operationId: getWatchlist
+      tags: [watchlist]
+      summary: Get watchlist
+      responses:
+        "200":
+          description: Watchlist items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/WatchlistItem"
+    post:
+      operationId: addToWatchlist
+      tags: [watchlist]
+      summary: Add content to watchlist
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WatchlistInput"
+      responses:
+        "201":
+          description: Watchlist item created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WatchlistItem"
+
+  /watchlist/{contentId}:
+    delete:
+      operationId: removeFromWatchlist
+      tags: [watchlist]
+      summary: Remove content from watchlist
+      parameters:
+        - name: contentId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Removed
+
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required: [status]
+
+    Content:
+      type: object
+      required: [id, title, description, type, genre, year, rating, duration, thumbnailUrl, backdropUrl, isFeatured, isTrending, isNewRelease, cast]
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        type:
+          type: string
+          description: movie, series, documentary, short
+        genre:
+          type: string
+        year:
+          type: integer
+        rating:
+          type: number
+        duration:
+          type: string
+        episodeCount:
+          type: ["integer", "null"]
+        seasons:
+          type: ["integer", "null"]
+        thumbnailUrl:
+          type: string
+        backdropUrl:
+          type: string
+        trailerUrl:
+          type: ["string", "null"]
+        isFeatured:
+          type: boolean
+        isTrending:
+          type: boolean
+        isNewRelease:
+          type: boolean
+        cast:
+          type: array
+          items:
+            type: string
+        director:
+          type: ["string", "null"]
+
+    Genre:
+      type: object
+      required: [id, name, slug]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        slug:
+          type: string
+
+    SearchResult:
+      type: object
+      required: [items, total]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/Content"
+        total:
+          type: integer
+
+    WatchlistItem:
+      type: object
+      required: [id, contentId, addedAt, content]
+      properties:
+        id:
+          type: integer
+        contentId:
+          type: integer
+        addedAt:
+          type: string
+          format: date-time
+        content:
+          $ref: "#/components/schemas/Content"
+
+    WatchlistInput:
+      type: object
+      required: [contentId]
+      properties:
+        contentId:
+          type: integer
