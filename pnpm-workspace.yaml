@@ -1,8 +1,8 @@
 # ============================================================================
-# FIXED DEPLOYMENT WORKSPACE CONFIGURATION
+# DEPLOYMENT-READY WORKSPACE CONFIGURATION
 # ============================================================================
 
-# Disabled the 1440-minute lock to prevent production build server installation blocks
+# Disabled the 24-hour block to ensure third-party peer packages install seamlessly
 minimumReleaseAge: 0
 
 packages:
@@ -122,3 +122,4 @@ overrides:
   "@expo/ngrok-bin>@expo/ngrok-bin-win32-x64": "-"
   "@esbuild-kit/esm-loader": "npm:tsx@^4.21.0"
   esbuild: "0.27.3"
+  
