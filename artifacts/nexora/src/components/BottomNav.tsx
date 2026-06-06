@@ -75,4 +75,4 @@ export default function BottomNav({ activeTab, setActiveTab, isAdmin = false }: 
       </div>
     </nav>
   );
-}
+                  }
