@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import BottomNav from "./components/BottomNav";
-import Home from "./pages/Home";
+import Home from "./pages/home";
 import SportsHub from "./pages/SportsHub";
 import MovieDetails from "./pages/MovieDetails";
 import CommunityBoard from "./pages/CommunityBoard";
