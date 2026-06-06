@@ -1,111 +1,79 @@
 import React, { useState, useEffect } from "react";
-import BottomNav from "./components/BottomNav";
-
-// 📂 Sub-pages and views
 import Home from "./pages/home";
-import SportsHub from "./components/SportsHub";
-import MovieDetails from "./components/MovieDetails";
-import CommunityBoard from "./components/CommunityBoard";
-import AiChat from "./components/AIChat"; 
+import CommunityHub from "./components/CommunityHub";
 import ProfileSettings from "./components/ProfileSettings";
-import AdminConsole from "./components/AdminConsole";
-import Auth from "./pages/auth"; 
+import AuthScreen from "./components/AuthScreen";
+import { Home as HomeIcon, MessageSquare, User, Radio } from "lucide-react";
 
 export default function App() {
-  // Splash Screen State
-  const [showSplash, setShowSplash] = useState<boolean>(true);
-  
-  // Navigation State Control
-  const [currentScreen, setCurrentScreen] = useState<string>("movies");
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(true);
-  const [userRole, setUserRole] = useState<"User" | "FOUNDER / ADMIN">("FOUNDER / ADMIN");
+  const [activeTab, setActiveTab] = useState("home");
+  const [user, setUser] = useState<{ userName: string; email: string } | null>(null);
+  const [isCheckingSession, setIsCheckingSession] = useState(true);
 
-  // Run the premium logo splash screen animation on application boot
+  // Check if user is already logged into this physical device
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowSplash(false);
-    }, 2500); // Plays for 2.5 seconds
-    return () => clearTimeout(timer);
+    const activeSession = localStorage.getItem("userSession");
+    if (activeSession) {
+      setUser(JSON.parse(activeSession));
+    }
+    setIsCheckingSession(false);
   }, []);
 
-  if (showSplash) {
+  const handleLogOut = () => {
+    localStorage.removeItem("userSession");
+    setUser(null);
+  };
+
+  if (isCheckingSession) {
     return (
-      <div className="min-h-screen bg-[#06070d] flex flex-col items-center justify-center relative overflow-hidden">
-        {/* Futuristic Background Glow Elements */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-[#00b4d8]/10 blur-[100px] rounded-full" />
-        
-        {/* Animated Brand Logo Container */}
-        <div className="relative z-10 flex flex-col items-center animate-fade-in">
-          <div className="h-16 w-16 bg-gradient-to-tr from-[#00b4d8] to-[#0077b6] rounded-2xl flex items-center justify-center shadow-[0_0_40px_rgba(0,180,216,0.3)] border border-[#00b4d8]/30 animate-pulse mb-4">
-            <span className="text-white text-3xl font-black tracking-tighter font-sans">N</span>
-          </div>
-          <h1 className="text-2xl font-black tracking-[0.3em] text-white font-mono uppercase bg-clip-text text-transparent bg-gradient-to-r from-white via-gray-200 to-gray-500">
-            NEXORA
-          </h1>
-          <p className="text-[9px] text-[#00b4d8] tracking-[0.5em] uppercase font-bold mt-2 font-mono">
-            Intelligence Matrix
-          </p>
-        </div>
-
-        {/* Premium Loading Bar */}
-        <div className="absolute bottom-16 w-32 h-[2px] bg-white/5 rounded-full overflow-hidden">
-          <div className="h-full bg-gradient-to-r from-[#00b4d8] to-[#0077b6] rounded-full w-full animate-[loading_2.5s_ease-in-out_infinite]" />
-        </div>
-
-        {/* Global Styles for Keyframe Animations */}
-        <style dangerouslySetInnerHTML={{__html: `
-          @keyframes loading {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-          }
-        `}} />
+      <div className="min-h-screen bg-[#06070d] flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-[#00b4d8] border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
-  if (!isAuthenticated) {
-    return <Auth />;
+  // Force login view overlay if no active database profile is signed in
+  if (!user) {
+    return <AuthScreen onAuthSuccess={(userData) => setUser(userData)} />;
   }
 
-  const renderCurrentScreen = () => {
-    switch (currentScreen.toLowerCase()) {
-      case "home":
-      case "movies":
-        return <Home />;
-      case "sports":
-        return <SportsHub />;
-      case "movie-details":
-        return <MovieDetails />;
-      case "community":
-        return <CommunityBoard />;
-      case "ai-guide":
-      case "ai":
-        return <AiChat />;
-      case "profile":
-      case "settings":
-        return <ProfileSettings />;
-      case "admin":
-        return <AdminConsole />;
-      default:
-        return <Home />;
-    }
-  };
-
   return (
-    <div className="min-h-screen bg-[#06070d] text-white selection:bg-[#00b4d8]/30 selection:text-white antialiased font-sans">
-      <main className="w-full transition-all duration-300 ease-in-out">
-        {renderCurrentScreen()}
+    <div className="min-h-screen bg-[#06070d] text-white">
+      {/* Dynamic Screen View Controller Switches */}
+      <main>
+        {activeTab === "home" && <Home />}
+        {activeTab === "chat" && <CommunityHub />}
+        {activeTab === "profile" && <ProfileSettings />}
       </main>
 
-      {currentScreen !== "movie-details" && (
-        <div className="fixed bottom-0 left-0 right-0 z-50">
-          <BottomNav 
-            activeTab={currentScreen} 
-            setActiveTab={(tab: string) => setCurrentScreen(tab)} 
-            isAdmin={userRole === "FOUNDER / ADMIN"}
-          />
+      {/* FIXED BASE FOOTER DOCK NAV BAR */}
+      <nav className="fixed bottom-0 left-0 right-0 bg-[#070913]/90 backdrop-blur-xl border-t border-white/5 z-50">
+        <div className="max-w-md mx-auto flex items-center justify-around py-3 px-2">
+          <button 
+            onClick={() => setActiveTab("home")} 
+            className={`flex flex-col items-center gap-1 transition-colors ${activeTab === "home" ? "text-[#00b4d8]" : "text-gray-500"}`}
+          >
+            <HomeIcon className="w-5 h-5" />
+            <span className="text-[9px] font-bold font-mono">HOME</span>
+          </button>
+          
+          <button 
+            onClick={() => setActiveTab("chat")} 
+            className={`flex flex-col items-center gap-1 transition-colors ${activeTab === "chat" ? "text-[#00b4d8]" : "text-gray-500"}`}
+          >
+            <MessageSquare className="w-5 h-5" />
+            <span className="text-[9px] font-bold font-mono">CHAT</span>
+          </button>
+
+          <button 
+            onClick={() => setActiveTab("profile")} 
+            className={`flex flex-col items-center gap-1 transition-colors ${activeTab === "profile" ? "text-[#00b4d8]" : "text-gray-500"}`}
+          >
+            <User className="w-5 h-5" />
+            <span className="text-[9px] font-bold font-mono">PROFILE</span>
+          </button>
         </div>
-      )}
+      </nav>
     </div>
   );
 }
