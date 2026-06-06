@@ -1,15 +1,15 @@
 {
-  "name": "workspace",
+  "name": "nexora-core-backend",
   "version": "1.0.0",
-  "private": true,
-  "license": "MIT",
+  "description": "Production network routing node server for Nexora Matrix",
+  "main": "server.js",
   "scripts": {
-    "build": "pnpm -r --if-present run build",
-    "typecheck": "tsc --build"
+    "start": "node server.js"
   },
-  "devDependencies": {
-    "prettier": "^3.0.0",
-    "typescript": "~5.3.0"
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "node-fetch": "^2.7.0"
   },
   "engines": {
     "node": ">=18.0.0"
