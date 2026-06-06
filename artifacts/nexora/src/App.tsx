@@ -15,12 +15,9 @@ import AdminConsole from "./components/AdminConsole";
 // 📂 Located in the pages directory with a lowercase 'a'
 import Auth from "./pages/auth"; 
 
-// Define strict type parameters for our single-page application router view states
-type ActiveActiveScreen = "auth" | "home" | "sports" | "movie-details" | "community" | "ai-guide" | "profile" | "admin" | "movies";
-
 export default function App() {
-  // Navigation State Control - Setting default screen state clearly
-  const [currentScreen, setCurrentScreen] = useState<ActiveActiveScreen>("movies");
+  // Navigation State Control - Tracks the active view screen
+  const [currentScreen, setCurrentScreen] = useState<string>("movies");
   
   // Global Mock Session State
   const [isAuthenticated, setIsAuthenticated] = useState(true);
@@ -33,9 +30,10 @@ export default function App() {
     return <Auth />;
   }
 
-  // 🛡️ Catch-All Router Function to safely render views without 404 drops
+  // 🛡️ Safe Router Function that translates Nav clicks to active components
   const renderCurrentScreen = () => {
-    switch (currentScreen) {
+    // Standardizing the input names to match your BottomNav component strings perfectly
+    switch (currentScreen.toLowerCase()) {
       case "home":
       case "movies":
         return <Home />;
@@ -46,13 +44,15 @@ export default function App() {
       case "community":
         return <CommunityBoard />;
       case "ai-guide":
+      case "ai":
         return <AiChat />;
       case "profile":
+      case "settings":
         return <ProfileSettings />;
       case "admin":
         return <AdminConsole />;
       default:
-        // Absolute safety fallback fallback to protect against empty states
+        // Safe fall-back so the screen never goes pitch black
         return <Home />;
     }
   };
@@ -71,7 +71,8 @@ export default function App() {
           <BottomNav 
             activeTab={currentScreen} 
             setActiveTab={(tab: string) => {
-              setCurrentScreen(tab as ActiveActiveScreen);
+              // Direct synchronization with whatever string your BottomNav triggers on click
+              setCurrentScreen(tab);
             }} 
             isAdmin={userRole === "FOUNDER / ADMIN"}
           />
