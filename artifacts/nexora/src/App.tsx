@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Home from "./pages/home";
-import CommunityHub from "./components/CommunityHub";
+import CommunityBoard from "./components/CommunityBoard";
 import ProfileSettings from "./components/ProfileSettings";
 import AuthScreen from "./components/AuthScreen";
 import { Home as HomeIcon, MessageSquare, User } from "lucide-react";
@@ -15,7 +15,7 @@ export default function App() {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [isCheckingSession, setIsCheckingSession] = useState<boolean>(true);
 
-  // Check if a user session exists in local phone memory
+  // Check if a user session exists in local storage
   useEffect(() => {
     try {
       const activeSession = localStorage.getItem("userSession");
@@ -23,7 +23,7 @@ export default function App() {
         setUser(JSON.parse(activeSession));
       }
     } catch (error) {
-      console.error("Session integrity verification failure:", error);
+      console.error("Session verification failure:", error);
     } finally {
       setIsCheckingSession(false);
     }
@@ -41,21 +41,21 @@ export default function App() {
     );
   }
 
-  // Force actual Login/Signup screen if no profile is active
+  // Force login view overlay if no user profile is active
   if (!user) {
     return <AuthScreen onAuthSuccess={handleAuthSuccess} />;
   }
 
   return (
     <div className="min-h-screen bg-[#06070d] text-white">
-      {/* Active Screen Context Router Layout */}
+      {/* Active Screen Context Router */}
       <main className="w-full h-full">
         {activeTab === "home" && <Home />}
-        {activeTab === "chat" && <CommunityHub />}
+        {activeTab === "chat" && <CommunityBoard />}
         {activeTab === "profile" && <ProfileSettings />}
       </main>
 
-      {/* MOBILE PERSISTENT BOTTOM NAVIGATION BAR DOCK */}
+      {/* PERSISTENT BOTTOM NAVIGATION BAR DOCK */}
       <nav className="fixed bottom-0 left-0 right-0 bg-[#070913]/90 backdrop-blur-xl border-t border-white/5 z-50">
         <div className="max-w-md mx-auto flex items-center justify-around py-3 px-2">
           <button 
@@ -75,7 +75,7 @@ export default function App() {
             }`}
           >
             <MessageSquare className="w-5 h-5" />
-            <span className="text-[9px] font-bold font-mono tracking-wider">HUB</span>
+            <span className="text-[9px] font-bold font-mono tracking-wider">BOARD</span>
           </button>
 
           <button 
