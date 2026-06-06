@@ -11,7 +11,7 @@ import CommunityBoard from "./components/CommunityBoard";
 import AiChat from "./components/AIChat"; 
 import ProfileSettings from "./components/ProfileSettings";
 import AdminConsole from "./components/AdminConsole";
-import Auth from "./components/auth"; // Fixed to lowercase 'auth' to resolve the final path mismatch
+import Auth from "./components/Auth"; // Fixed back to capital 'A' to match Auth.tsx inside components exactly
 
 // Define strict type parameters for our single-page application router view states
 type ActiveActiveScreen = "auth" | "home" | "sports" | "movie-details" | "community" | "ai-guide" | "profile" | "admin";
