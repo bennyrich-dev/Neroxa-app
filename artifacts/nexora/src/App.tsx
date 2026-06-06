@@ -16,14 +16,13 @@ import AdminConsole from "./components/AdminConsole";
 import Auth from "./pages/auth"; 
 
 // Define strict type parameters for our single-page application router view states
-type ActiveActiveScreen = "auth" | "home" | "sports" | "movie-details" | "community" | "ai-guide" | "profile" | "admin";
+type ActiveActiveScreen = "auth" | "home" | "sports" | "movie-details" | "community" | "ai-guide" | "profile" | "admin" | "movies";
 
 export default function App() {
-  // Navigation State Control
+  // Navigation State Control - Updated to align with your bottom nav's starting position
   const [currentScreen, setCurrentScreen] = useState<ActiveActiveScreen>("home");
   
   // Global Mock Session State
-  // Toggle this true/false to preview the login suite vs the actual running application dashboard
   const [isAuthenticated, setIsAuthenticated] = useState(true);
   
   // Administrative Privilege Gate state 
@@ -39,7 +38,8 @@ export default function App() {
       
       {/* 📱 ACTIVE VIEW PORT INTERACTION ROUTER */}
       <main className="w-full transition-all duration-300 ease-in-out">
-        {currentScreen === "home" && <Home />}
+        {/* Support both 'home' and 'movies' targets to guarantee your main feed displays */}
+        {(currentScreen === "home" || currentScreen === "movies") && <Home />}
         {currentScreen === "sports" && <SportsHub />}
         {currentScreen === "movie-details" && <MovieDetails />}
         {currentScreen === "community" && <CommunityBoard />}
@@ -49,12 +49,15 @@ export default function App() {
       </main>
 
       {/* 🧭 PREMIUM HUD NAVIGATION CONTROL PANEL */}
-      {/* Hidden during active movie detail streams to ensure distraction-free immersive full-screen cinematic playback */}
       {currentScreen !== "movie-details" && (
         <div className="fixed bottom-0 left-0 right-0 z-50">
           <BottomNav 
             activeTab={currentScreen} 
-            setActiveTab={(tab: string) => setCurrentScreen(tab as ActiveActiveScreen)} 
+            setActiveTab={(tab: string) => {
+              // Map incoming navigation identifiers to valid routing targets
+              const target = tab === "movies" ? "movies" : (tab as ActiveActiveScreen);
+              setCurrentScreen(target);
+            }} 
             isAdmin={userRole === "FOUNDER / ADMIN"}
           />
         </div>
