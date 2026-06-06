@@ -1,13 +1,17 @@
 import React, { useState } from "react";
 import BottomNav from "./components/BottomNav";
+
+// 📂 Only home.tsx lives in the pages folder
 import Home from "./pages/home";
-import SportsHub from "./pages/SportsHub";
-import MovieDetails from "./pages/MovieDetails";
-import CommunityBoard from "./pages/CommunityBoard";
-import AiChat from "./pages/AiChat";
-import ProfileSettings from "./pages/ProfileSettings";
-import AdminConsole from "./pages/AdminConsole";
-import Auth from "./pages/Auth";
+
+// 📂 All these files live inside the components folder based on your file tree
+import SportsHub from "./components/SportsHub";
+import MovieDetails from "./components/MovieDetails";
+import CommunityBoard from "./components/CommunityBoard";
+import AiChat from "./components/AiChat";
+import ProfileSettings from "./components/ProfileSettings";
+import AdminConsole from "./components/AdminConsole";
+import Auth from "./components/Auth";
 
 // Define strict type parameters for our single-page application router view states
 type ActiveActiveScreen = "auth" | "home" | "sports" | "movie-details" | "community" | "ai-guide" | "profile" | "admin";
