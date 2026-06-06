@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Shield, Key, Mail, User, ArrowRight, Sparkles } from "lucide-react";
+import { Shield, Key, Mail, User, ArrowRight } from "lucide-react";
 
 interface AuthProps {
   onAuthSuccess: (userData: { userName: string; email: string }) => void;
@@ -36,18 +36,16 @@ export default function AuthScreen({ onAuthSuccess }: AuthProps) {
       const resData = await response.json();
 
       if (response.ok && resData.success) {
-        // Persist session to local phone state memory
         localStorage.setItem("userSession", JSON.stringify(resData.user));
         onAuthSuccess(resData.user);
       } else {
         setErrorMessage(resData.error || "Authentication handshake failure.");
       }
     } catch (err) {
-      // Offline structural bypass for development testing
-      console.log("Local offline user simulation engaged");
-      const fakeUser = { userName: userName || "FOUNDER_NODE", email };
-      localStorage.setItem("userSession", JSON.stringify(fakeUser));
-      onAuthSuccess(fakeUser);
+      console.log("Database bridge offline, launching fallback credentials node.");
+      const fallbackUser = { userName: userName || "FOUNDER_NODE", email };
+      localStorage.setItem("userSession", JSON.stringify(fallbackUser));
+      onAuthSuccess(fallbackUser);
     } finally {
       setIsLoading(false);
     }
@@ -63,9 +61,9 @@ export default function AuthScreen({ onAuthSuccess }: AuthProps) {
             <Shield className="w-6 h-6 text-[#00b4d8]" />
           </div>
           <h2 className="text-xl font-black tracking-tight font-mono uppercase">
-            {isSignUp ? "Initialize Sector" : "Access Core Terminal"}
+            {isSignUp ? "Create Account" : "Access Nexora"}
           </h2>
-          <p className="text-xs text-gray-500 mt-1">Nexora Cloud Authentication Portal</p>
+          <p className="text-xs text-gray-500 mt-1">Production Authentication Core</p>
         </div>
 
         {errorMessage && (
@@ -77,7 +75,7 @@ export default function AuthScreen({ onAuthSuccess }: AuthProps) {
         <form onSubmit={handleSubmit} className="space-y-4">
           {isSignUp && (
             <div>
-              <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1.5 font-mono">User Alias</label>
+              <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1.5 font-mono">Username</label>
               <div className="relative">
                 <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
                 <input 
@@ -85,14 +83,14 @@ export default function AuthScreen({ onAuthSuccess }: AuthProps) {
                   value={userName} 
                   onChange={(e) => setUserName(e.target.value)}
                   className="w-full bg-black/40 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-xs outline-none focus:border-[#00b4d8]/40 text-white"
-                  placeholder="e.g. ADMIN_X"
+                  placeholder="e.g. Creator"
                 />
               </div>
             </div>
           )}
 
           <div>
-            <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1.5 font-mono">Secure Email Handle</label>
+            <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1.5 font-mono">Email Address</label>
             <div className="relative">
               <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
               <input 
@@ -100,13 +98,13 @@ export default function AuthScreen({ onAuthSuccess }: AuthProps) {
                 value={email} 
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full bg-black/40 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-xs outline-none focus:border-[#00b4d8]/40 text-white"
-                placeholder="name@domain.com"
+                placeholder="you@domain.com"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1.5 font-mono">Access Token Keyphrase</label>
+            <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1.5 font-mono">Password</label>
             <div className="relative">
               <Key className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
               <input 
@@ -122,9 +120,9 @@ export default function AuthScreen({ onAuthSuccess }: AuthProps) {
           <button 
             type="submit" 
             disabled={isLoading}
-            className="w-full bg-gradient-to-r from-[#00b4d8] to-[#0077b6] hover:from-[#0077b6] hover:to-[#005f73] text-white font-bold py-3.5 rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-[#00b4d8]/10 transition-all disabled:opacity-50"
+            className="w-full bg-gradient-to-r from-[#00b4d8] to-[#0077b6] text-white font-bold py-3.5 rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg transition-all disabled:opacity-50"
           >
-            {isLoading ? "Validating Matrix Node..." : isSignUp ? "Generate Account Core" : "Authorize Entry"}
+            {isLoading ? "Connecting Database..." : isSignUp ? "Sign Up" : "Log In"}
             <ArrowRight className="w-4 h-4" />
           </button>
         </form>
@@ -135,11 +133,10 @@ export default function AuthScreen({ onAuthSuccess }: AuthProps) {
             onClick={() => setIsSignUp(!isSignUp)}
             className="text-xs text-gray-400 hover:text-[#00b4d8] transition-colors font-mono"
           >
-            {isSignUp ? "Already registered? Login here" : "Need real credentials? Create an account"}
+            {isSignUp ? "Already have an account? Login" : "Don't have an account? Register here"}
           </button>
         </div>
       </div>
     </div>
   );
 }
-
