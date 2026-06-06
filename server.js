@@ -3,66 +3,105 @@ const cors = require('cors');
 const fetch = require('node-fetch');
 
 const app = express();
+
+// Render sets up ports automatically using an environment variable
 const PORT = process.env.PORT || 10000;
 
 app.use(cors({ origin: "*" }));
 app.use(express.json());
 
-// Temporary Server Storage Matrices (Wipes fake hardcoded files)
+// Server Volatile State Memory Storage (Replaces hardcoded mocks with live application states)
 let registeredUsers = [];
 let savedMessages = [];
 
-// Base Network Route Test
+// Base Root Route to Verify Server Diagnostics
 app.get('/', (req, res) => {
-  res.json({ success: true, message: "Nexora Production Engine Operational" });
+  res.json({ 
+    success: true, 
+    status: "ONLINE", 
+    system: "NEXORA PRODUCTION MATRIX RUNNING NATIVELY" 
+  });
 });
 
-// 🔐 SIGNUP ENDPOINT
+// 🔐 REAL ACCOUNT REGISTRATION ENDPOINT
 app.post('/api/auth/signup', (req, res) => {
   const { email, password, userName } = req.body;
+  
   if (!email || !password || !userName) {
-    return res.status(400).json({ success: false, error: "Missing required account parameters." });
+    return res.status(400).json({ success: false, error: "Missing identity credentials parameters." });
   }
 
-  const userExists = registeredUsers.find(u => u.email === email);
-  if (userExists) {
-    return res.status(400).json({ success: false, error: "Identity profile already registered." });
+  const existingUser = registeredUsers.find(user => user.email === email);
+  if (existingUser) {
+    return res.status(400).json({ success: false, error: "This email layout is already registered." });
   }
 
-  const newUser = { userName, email, id: `NX-${Date.now()}` };
-  registeredUsers.push({ ...newUser, password });
+  const identityProfile = { id: `NX-${Date.now()}`, userName, email };
+  registeredUsers.push({ ...identityProfile, password });
 
-  return res.status(201).json({ success: true, user: newUser });
+  return res.status(201).json({ success: true, user: identityProfile });
 });
 
-// 🔓 LOGIN ENDPOINT
+// 🔓 REAL ACCOUNT LOGIN ENDPOINT
 app.post('/api/auth/login', (req, res) => {
   const { email, password } = req.body;
-  const user = registeredUsers.find(u => u.email === email && u.password === password);
-
-  if (!user) {
-    return res.status(401).json({ success: false, error: "Invalid access keyphrase credentials." });
+  
+  const verifiedProfile = registeredUsers.find(user => user.email === email && user.password === password);
+  if (!verifiedProfile) {
+    return res.status(401).json({ success: false, error: "Invalid registration access credentials." });
   }
 
-  return res.json({ success: true, user: { userName: user.userName, email: user.email, id: user.id } });
+  return res.json({ 
+    success: true, 
+    user: { 
+      id: verifiedProfile.id, 
+      userName: verifiedProfile.userName, 
+      email: verifiedProfile.email 
+    } 
+  });
 });
 
-// 💬 COMMUNITY REAL MESSAGES ENDPOINTS
+// 💬 ACTIVE MESSAGING TERMINAL LINK ROUTES
 app.get('/api/messages', (req, res) => {
   res.json({ success: true, messages: savedMessages });
 });
 
 app.post('/api/messages/send', (req, res) => {
   const { user, text, timestamp } = req.body;
-  const msgObj = { id: `MSG-${Date.now()}`, user, text, timestamp };
-  savedMessages.push(msgObj);
   
-  // Cap history queue to avoid memory overload leaks
-  if (savedMessages.length > 50) savedMessages.shift();
+  if (!user || !text) {
+    return res.status(400).json({ success: false, error: "Cannot dispatch empty messages down line." });
+  }
+
+  const structuralMessage = { id: `MSG-${Date.now()}`, user, text, timestamp: timestamp || "Just Now" };
+  savedMessages.push(structuralMessage);
   
-  res.json({ success: true, message: msgObj });
+  // Prevent stack overflow memory leaks on server instances
+  if (savedMessages.length > 100) {
+    savedMessages.shift();
+  }
+
+  res.json({ success: true, message: structuralMessage });
+});
+
+// 🎬 DYNAMIC REAL MOVIE TMDB PROXY PROXY TUNNEL ENDPOINT
+app.get('/api/movies/trending', async (req, res) => {
+  try {
+    const key = process.env.TMDB_API_KEY || "ca8c2c77d48d6174a742f9b8841da367";
+    const tmdbResponse = await fetch(`https://api.themoviedb.org/3/trending/movie/week?api_key=${key}`);
+    
+    if (!tmdbResponse.ok) {
+      throw new Error(`TMDB connection response error: ${tmdbResponse.status}`);
+    }
+
+    const data = await tmdbResponse.json();
+    res.json(data);
+  } catch (error) {
+    console.error("Proxy database pipeline error:", error);
+    res.status(500).json({ success: false, error: "Failed to connect to cinema streaming clusters." });
+  }
 });
 
 app.listen(PORT, () => {
-  console.log(`Live system deployment reading parameters on port ${PORT}`);
+  console.log(`Server executing live production processes on port ${PORT}`);
 });
