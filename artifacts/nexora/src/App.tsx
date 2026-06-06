@@ -19,7 +19,7 @@ import Auth from "./pages/auth";
 type ActiveActiveScreen = "auth" | "home" | "sports" | "movie-details" | "community" | "ai-guide" | "profile" | "admin" | "movies";
 
 export default function App() {
-  // Navigation State Control - Defaults to "movies" to match your active navbar highlight
+  // Navigation State Control - Setting default screen state clearly
   const [currentScreen, setCurrentScreen] = useState<ActiveActiveScreen>("movies");
   
   // Global Mock Session State
@@ -33,19 +33,36 @@ export default function App() {
     return <Auth />;
   }
 
+  // 🛡️ Catch-All Router Function to safely render views without 404 drops
+  const renderCurrentScreen = () => {
+    switch (currentScreen) {
+      case "home":
+      case "movies":
+        return <Home />;
+      case "sports":
+        return <SportsHub />;
+      case "movie-details":
+        return <MovieDetails />;
+      case "community":
+        return <CommunityBoard />;
+      case "ai-guide":
+        return <AiChat />;
+      case "profile":
+        return <ProfileSettings />;
+      case "admin":
+        return <AdminConsole />;
+      default:
+        // Absolute safety fallback fallback to protect against empty states
+        return <Home />;
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#06070d] text-white selection:bg-[#00b4d8]/30 selection:text-white antialiased font-sans">
       
       {/* 📱 ACTIVE VIEW PORT INTERACTION ROUTER */}
       <main className="w-full transition-all duration-300 ease-in-out">
-        {/* Shows the Home dashboard view when either 'home' or 'movies' is selected */}
-        {(currentScreen === "home" || currentScreen === "movies") && <Home />}
-        {currentScreen === "sports" && <SportsHub />}
-        {currentScreen === "movie-details" && <MovieDetails />}
-        {currentScreen === "community" && <CommunityBoard />}
-        {currentScreen === "ai-guide" && <AiChat />}
-        {currentScreen === "profile" && <ProfileSettings />}
-        {currentScreen === "admin" && <AdminConsole />}
+        {renderCurrentScreen()}
       </main>
 
       {/* 🧭 PREMIUM HUD NAVIGATION CONTROL PANEL */}
@@ -53,7 +70,9 @@ export default function App() {
         <div className="fixed bottom-0 left-0 right-0 z-50">
           <BottomNav 
             activeTab={currentScreen} 
-            setActiveTab={(tab: string) => setCurrentScreen(tab as ActiveActiveScreen)} 
+            setActiveTab={(tab: string) => {
+              setCurrentScreen(tab as ActiveActiveScreen);
+            }} 
             isAdmin={userRole === "FOUNDER / ADMIN"}
           />
         </div>
