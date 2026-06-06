@@ -3,13 +3,16 @@ const cors = require('cors');
 const fetch = require('node-fetch');
 
 const app = express();
+// Render assigns a random port automatically using an environment variable
 const PORT = process.env.PORT || 5000;
 
-// Enable CORS so your Vercel frontend can talk to this Render backend server
-app.use(cors());
+// Connect the CORS bridge layer so your Vercel frontend can talk to this server
+app.use(cors({
+  origin: "*" // Allows your Vercel deployment link to grab server data safely
+}));
 app.use(express.json());
 
-// Fake database in memory to hold your profile updates so they don't vanish on refresh
+// In-memory data store placeholder for mobile view syncs
 let userProfile = {
   userName: "FOUNDER / ADMIN",
   streamQuality: "Ultra HD 4K",
@@ -17,29 +20,32 @@ let userProfile = {
   profileImage: null
 };
 
-// 👤 Profile API Endpoints
+// Test root endpoint to verify server is alive
+app.get('/', (req, res) => {
+  res.json({ status: "ONLINE", system: "NEXORA CORE MATRIX ENGAGED" });
+});
+
+// Profile endpoints
 app.get('/api/profile', (req, res) => {
   res.json(userProfile);
 });
 
 app.post('/api/profile/save', (req, res) => {
   userProfile = { ...userProfile, ...req.body };
-  res.json({ success: true, message: "Profile saved to backend storage!", profile: userProfile });
+  res.json({ success: true, profile: userProfile });
 });
 
-// 🎬 Real Movie Proxy Endpoint (Protects your TMDB access safely)
+// Dynamic TMDB movie proxy tunnel
 app.get('/api/movies/trending', async (req, res) => {
   try {
     const response = await fetch("https://api.themoviedb.org/3/trending/movie/week?api_key=ca8c2c77d48d6174a742f9b8841da367");
     const data = await response.json();
     res.json(data);
   } catch (error) {
-    res.status(500).json({ error: "Failed to pull data from TMDB matrix nodes." });
+    res.status(500).json({ error: "Pipeline failure connecting to streaming database nodes." });
   }
 });
 
-// Start Server Listen
 app.listen(PORT, () => {
-  console.log(`Nexora Core Backend Engine running live on port ${PORT}`);
+  console.log(`Server executing live on active port ${PORT}`);
 });
-
