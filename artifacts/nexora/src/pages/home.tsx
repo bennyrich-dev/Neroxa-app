@@ -53,7 +53,7 @@ export default function Home() {
   }
 
   return (
-    <div className="pb-32 bg-[#06070d]">
+    <div className="pb-32 bg-[#06070d] min-h-screen text-white">
       {/* HERO BANNER */}
       <div className="relative h-[70vh] w-full overflow-hidden flex items-end">
         <div className="absolute inset-0 z-0">
@@ -169,4 +169,5 @@ export default function Home() {
       </div>
     </div>
   );
-}
+                }
+                
