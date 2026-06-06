@@ -8,7 +8,7 @@ import Home from "./pages/home";
 import SportsHub from "./components/SportsHub";
 import MovieDetails from "./components/MovieDetails";
 import CommunityBoard from "./components/CommunityBoard";
-import AiChat from "./components/AiChat";
+import AiChat from "./components/AIChat"; // Fixed lowercase 'c' to capital 'C' to match your AIChat.tsx file exactly
 import ProfileSettings from "./components/ProfileSettings";
 import AdminConsole from "./components/AdminConsole";
 import Auth from "./components/Auth";
