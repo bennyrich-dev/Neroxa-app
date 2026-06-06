@@ -12,15 +12,15 @@ import AiChat from "./components/AIChat";
 import ProfileSettings from "./components/ProfileSettings";
 import AdminConsole from "./components/AdminConsole";
 
-// 📂 Fixed: Located in the pages directory with a lowercase 'a'
+// 📂 Located in the pages directory with a lowercase 'a'
 import Auth from "./pages/auth"; 
 
 // Define strict type parameters for our single-page application router view states
 type ActiveActiveScreen = "auth" | "home" | "sports" | "movie-details" | "community" | "ai-guide" | "profile" | "admin" | "movies";
 
 export default function App() {
-  // Navigation State Control - Updated to align with your bottom nav's starting position
-  const [currentScreen, setCurrentScreen] = useState<ActiveActiveScreen>("home");
+  // Navigation State Control - Defaults to "movies" to match your active navbar highlight
+  const [currentScreen, setCurrentScreen] = useState<ActiveActiveScreen>("movies");
   
   // Global Mock Session State
   const [isAuthenticated, setIsAuthenticated] = useState(true);
@@ -38,7 +38,7 @@ export default function App() {
       
       {/* 📱 ACTIVE VIEW PORT INTERACTION ROUTER */}
       <main className="w-full transition-all duration-300 ease-in-out">
-        {/* Support both 'home' and 'movies' targets to guarantee your main feed displays */}
+        {/* Shows the Home dashboard view when either 'home' or 'movies' is selected */}
         {(currentScreen === "home" || currentScreen === "movies") && <Home />}
         {currentScreen === "sports" && <SportsHub />}
         {currentScreen === "movie-details" && <MovieDetails />}
@@ -53,11 +53,7 @@ export default function App() {
         <div className="fixed bottom-0 left-0 right-0 z-50">
           <BottomNav 
             activeTab={currentScreen} 
-            setActiveTab={(tab: string) => {
-              // Map incoming navigation identifiers to valid routing targets
-              const target = tab === "movies" ? "movies" : (tab as ActiveActiveScreen);
-              setCurrentScreen(target);
-            }} 
+            setActiveTab={(tab: string) => setCurrentScreen(tab as ActiveActiveScreen)} 
             isAdmin={userRole === "FOUNDER / ADMIN"}
           />
         </div>
