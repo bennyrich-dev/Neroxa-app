@@ -3,49 +3,66 @@ const cors = require('cors');
 const fetch = require('node-fetch');
 
 const app = express();
-// Render assigns a random port automatically using an environment variable
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 10000;
 
-// Connect the CORS bridge layer so your Vercel frontend can talk to this server
-app.use(cors({
-  origin: "*" // Allows your Vercel deployment link to grab server data safely
-}));
+app.use(cors({ origin: "*" }));
 app.use(express.json());
 
-// In-memory data store placeholder for mobile view syncs
-let userProfile = {
-  userName: "FOUNDER / ADMIN",
-  streamQuality: "Ultra HD 4K",
-  emailNotification: true,
-  profileImage: null
-};
+// Temporary Server Storage Matrices (Wipes fake hardcoded files)
+let registeredUsers = [];
+let savedMessages = [];
 
-// Test root endpoint to verify server is alive
+// Base Network Route Test
 app.get('/', (req, res) => {
-  res.json({ status: "ONLINE", system: "NEXORA CORE MATRIX ENGAGED" });
+  res.json({ success: true, message: "Nexora Production Engine Operational" });
 });
 
-// Profile endpoints
-app.get('/api/profile', (req, res) => {
-  res.json(userProfile);
-});
-
-app.post('/api/profile/save', (req, res) => {
-  userProfile = { ...userProfile, ...req.body };
-  res.json({ success: true, profile: userProfile });
-});
-
-// Dynamic TMDB movie proxy tunnel
-app.get('/api/movies/trending', async (req, res) => {
-  try {
-    const response = await fetch("https://api.themoviedb.org/3/trending/movie/week?api_key=ca8c2c77d48d6174a742f9b8841da367");
-    const data = await response.json();
-    res.json(data);
-  } catch (error) {
-    res.status(500).json({ error: "Pipeline failure connecting to streaming database nodes." });
+// 🔐 SIGNUP ENDPOINT
+app.post('/api/auth/signup', (req, res) => {
+  const { email, password, userName } = req.body;
+  if (!email || !password || !userName) {
+    return res.status(400).json({ success: false, error: "Missing required account parameters." });
   }
+
+  const userExists = registeredUsers.find(u => u.email === email);
+  if (userExists) {
+    return res.status(400).json({ success: false, error: "Identity profile already registered." });
+  }
+
+  const newUser = { userName, email, id: `NX-${Date.now()}` };
+  registeredUsers.push({ ...newUser, password });
+
+  return res.status(201).json({ success: true, user: newUser });
+});
+
+// 🔓 LOGIN ENDPOINT
+app.post('/api/auth/login', (req, res) => {
+  const { email, password } = req.body;
+  const user = registeredUsers.find(u => u.email === email && u.password === password);
+
+  if (!user) {
+    return res.status(401).json({ success: false, error: "Invalid access keyphrase credentials." });
+  }
+
+  return res.json({ success: true, user: { userName: user.userName, email: user.email, id: user.id } });
+});
+
+// 💬 COMMUNITY REAL MESSAGES ENDPOINTS
+app.get('/api/messages', (req, res) => {
+  res.json({ success: true, messages: savedMessages });
+});
+
+app.post('/api/messages/send', (req, res) => {
+  const { user, text, timestamp } = req.body;
+  const msgObj = { id: `MSG-${Date.now()}`, user, text, timestamp };
+  savedMessages.push(msgObj);
+  
+  // Cap history queue to avoid memory overload leaks
+  if (savedMessages.length > 50) savedMessages.shift();
+  
+  res.json({ success: true, message: msgObj });
 });
 
 app.listen(PORT, () => {
-  console.log(`Server executing live on active port ${PORT}`);
+  console.log(`Live system deployment reading parameters on port ${PORT}`);
 });
