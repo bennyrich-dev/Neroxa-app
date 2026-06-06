@@ -1,70 +1,78 @@
 import React from "react";
-import { useLocation } from "wouter";
-import { Home, Trophy, MessageSquare, Users, User } from "lucide-react";
+import { 
+  Home, 
+  Trophy, 
+  MessageSquare, 
+  Compass, 
+  User, 
+  ShieldAlert 
+} from "lucide-react";
 
 interface BottomNavProps {
-  hasNotifications?: boolean;
+  activeTab: string;
+  setActiveTab: (tab: string) => void;
+  isAdmin?: boolean;
 }
 
-export default function BottomNav({ hasNotifications = false }: BottomNavProps) {
-  const [location, setLocation] = useLocation();
+export default function BottomNav({ activeTab, setActiveTab, isAdmin = false }: BottomNavProps) {
+  
+  // Normalizing tabs to lowercase for perfect matching with App.tsx router keys
+  const normalizedActive = activeTab ? activeTab.toLowerCase() : "movies";
 
-  // Updated navigation layout to include the Community Board tab
   const navItems = [
-    { path: "/", label: "Home", icon: Home },
-    { path: "/sports", label: "Sports", icon: Trophy },
-    { path: "/ai-chat", label: "AI Guide", icon: MessageSquare },
-    { path: "/community", label: "Community", icon: Users }, // 👈 New Community Icon added!
-    { path: "/profile", label: "Profile", icon: User },
+    { id: "movies", label: "HOME", icon: Home },
+    { id: "sports", label: "SPORTS", icon: Trophy },
+    { id: "ai", label: "AI GUIDE", icon: Compass },
+    { id: "community", label: "COMMUNITY", icon: MessageSquare },
+    { id: "profile", label: "PROFILE", icon: User },
   ];
 
+  // Dynamically include admin options if privileges allow
+  if (isAdmin) {
+    navItems.push({ id: "admin", label: "ADMIN", icon: ShieldAlert });
+  }
+
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-[#0b1424]/95 backdrop-blur-md border-t border-gray-800/80 px-1 py-2.5 z-50 max-w-md mx-auto rounded-t-2xl shadow-2xl shadow-black/50">
-      <div className="flex items-center justify-around relative">
+    <nav className="bg-[#0f111a]/95 border-t border-white/5 backdrop-blur-xl px-2 py-1.5 safe-bottom shadow-2xl">
+      <div className="max-w-md mx-auto flex items-center justify-around">
         {navItems.map((item) => {
-          const isActive = location === item.path;
-          const Icon = item.icon;
+          const IconComponent = item.icon;
+          const isSelected = normalizedActive === item.id || (item.id === "movies" && normalizedActive === "home");
 
           return (
             <button
-              key={item.path}
+              key={item.id}
+              onClick={() => {
+                // CRITICAL FIX: Explicitly forcing the parent App router state switch on click
+                setActiveTab(item.id);
+              }}
+              className="flex flex-col items-center justify-center min-w-[64px] py-1 transition-all duration-200 relative group"
               type="button"
-              onClick={() => setLocation(item.path)}
-              className="flex flex-col items-center justify-center flex-1 relative py-1 group transition-transform active:scale-95"
             >
-              {/* Icon Container with active glow ring styling */}
-              <div
-                className={`p-2 rounded-xl transition-all duration-300 relative ${
-                  isActive
-                    ? "bg-[#00b4d8]/10 text-[#00b4d8] scale-110"
-                    : "text-gray-400 hover:text-white"
-                }`}
-              >
-                <Icon className="w-5 h-5 stroke-[2.25]" />
-                
-                {/* Real-Time Interaction Alert Dot */}
-                {item.path === "/profile" && hasNotifications && (
-                  <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-amber-500 rounded-full ring-2 ring-[#0b1424] animate-pulse" />
-                )}
-              </div>
+              {/* Dynamic Active Indicator Bar top offset */}
+              {isSelected && (
+                <div className="absolute top-0 w-8 h-[2px] bg-gradient-to-r from-[#00b4d8] to-[#0077b6] rounded-full animate-pulse" />
+              )}
 
-              {/* Text label element */}
-              <span
-                className={`text-[9px] font-bold tracking-wide mt-0.5 transition-colors duration-300 uppercase ${
-                  isActive ? "text-[#00b4d8]" : "text-gray-500 group-hover:text-gray-300"
+              <IconComponent 
+                className={`w-4.5 h-4.5 mb-0.5 transition-transform duration-200 group-active:scale-90 ${
+                  isSelected 
+                    ? "text-[#00b4d8] drop-shadow-[0_0_8px_rgba(0,180,216,0.4)]" 
+                    : "text-gray-500 group-hover:text-gray-300"
+                }`} 
+              />
+              
+              <span 
+                className={`text-[8px] font-bold tracking-wider font-mono uppercase transition-colors ${
+                  isSelected ? "text-white" : "text-gray-500 group-hover:text-gray-400"
                 }`}
               >
                 {item.label}
               </span>
-
-              {/* Slider underline active accent indicator */}
-              {isActive && (
-                <div className="absolute bottom-[-6px] w-5 h-0.5 bg-[#00b4d8] rounded-full shadow-lg shadow-[#00b4d8]/50" />
-              )}
             </button>
           );
         })}
       </div>
-    </div>
+    </nav>
   );
 }
