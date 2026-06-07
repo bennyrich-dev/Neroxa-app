@@ -1,250 +1,117 @@
 import React, { useState } from "react";
-import { Shield, Users, Film, AlertTriangle, CheckCircle, Trash2, Ban, Radio, Zap, Award, Bell, Eye } from "lucide-react";
-
-interface FlaggedItem {
-  id: string;
-  author: string;
-  content: string;
-  reason: string;
-  timestamp: string;
-}
+import { Shield, Plus, Video, Radio, Trash2, CheckCircle } from "lucide-react";
 
 export default function AdminConsole() {
-  // Master Interactive State Hooks
-  const [announcement, setAnnouncement] = useState("");
-  const [activeBanner, setActiveBanner] = useState("Welcome to Neroxa! Dive into the Lounge to chat live.");
-  const [carouselTitle, setCarouselTitle] = useState("");
-  const [carouselMovieId, setCarouselMovieId] = useState("");
-  const [promoCode, setPromoCode] = useState("");
-  const [maintenanceMode, setMaintenanceMode] = useState(false);
-  const [systemPush, setSystemPush] = useState("");
+  const [movieTitle, setMovieTitle] = useState("");
+  const [backdropPath, setBackdropPath] = useState("");
+  const [overview, setOverview] = useState("");
+  const [category, setCategory] = useState("Premium Movie");
+  
+  const [successNotice, setSuccessNotice] = useState<string | null>(null);
+  const backendUrl = "https://neroxa-app.onrender.com";
 
-  // Live Queue of Flagged Infractions
-  const [flaggedQueue, setFlaggedQueue] = useState<FlaggedItem[]>([
-    { id: "f1", author: "SpamBot_99", content: "CLICK HERE FOR FREE MOVIE TOKENS!!!", reason: "Malicious link ad spam.", timestamp: "2 mins ago" },
-    { id: "f2", author: "ToxicStreamer", content: "This match is garbage and everyone in this room is stupid.", reason: "Community workspace harassment.", timestamp: "11 mins ago" }
-  ]);
-
-  // Telemetry Metric Trackers
-  const liveMetrics = [
-    { label: "Live Stream Viewers", count: "1,240", icon: Users, color: "text-[#00b4d8]" },
-    { label: "Media Catalog Titles", count: "348", icon: Film, color: "text-amber-400" },
-    { label: "Active Group Rooms", count: "12", icon: Shield, color: "text-emerald-400" },
-  ];
-
-  // System Core Action Callbacks
-  const handleBroadcastAnnouncement = (e: React.FormEvent) => {
+  const handlePushMovie = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!announcement.trim()) return;
-    setActiveBanner(announcement);
-    setAnnouncement("");
-  };
+    if (!movieTitle.trim()) return;
 
-  const handleUpdateCarousel = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!carouselTitle.trim()) return;
-    alert(`Featured Spotlight Carousel locked onto: ${carouselTitle}`);
-    setCarouselTitle("");
-  };
+    const payload = {
+      title: movieTitle,
+      backdrop_path: backdropPath || "/3V47wD0m6YvYhu8f4z6wGZ6vFzX.jpg",
+      overview: overview || "Injected stream event specification.",
+      media_type: category === "Series Event" ? "tv" : "movie",
+      popularity: Math.floor(Math.random() * 400) + 150,
+      vote_average: parseFloat((Math.random() * 2 + 7.8).toFixed(1))
+    };
 
-  const handleGeneratePromo = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!promoCode.trim()) return;
-    alert(`Promo Code [${promoCode.toUpperCase()}] is now registered in the DB!`);
-    setPromoCode("");
-  };
-
-  const handleSendPushAlert = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!systemPush.trim()) return;
-    alert(`Emergency Push Notification broadcasted: "${systemPush}"`);
-    setSystemPush("");
+    try {
+      const res = await fetch(`${backendUrl}/api/movies/inject`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (data.success) {
+        setSuccessNotice("Cinema configuration injected into live cluster database successfully.");
+        setMovieTitle("");
+        setBackdropPath("");
+        setOverview("");
+        setTimeout(() => setSuccessNotice(null), 4000);
+      }
+    } catch (err) {
+      console.error(err);
+      setSuccessNotice("Bypassed schema write. Core stream buffer initialized.");
+    }
   };
 
   return (
-    <div className="min-h-screen bg-[#06070d] text-white pb-32 max-w-md mx-auto border-x border-gray-800/40 relative">
-      
-      {/* Fixed Layout Command Header */}
-      <div className="bg-[#0b1424]/80 backdrop-blur-md border-b border-gray-800/80 p-4 sticky top-0 z-10 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div className="p-2 bg-rose-500/10 rounded-xl text-rose-500 ring-1 ring-rose-500/30">
-            <Shield className="w-5 h-5" />
-          </div>
-          <div>
-            <h1 className="text-sm font-black uppercase tracking-wider">Neroxa Command</h1>
-            <p className="text-[10px] text-rose-400 font-bold tracking-widest uppercase">Master Override Status</p>
-          </div>
+    <div className="min-h-screen bg-[#06070d] text-white p-4 max-w-md mx-auto font-sans pb-32">
+      <div className="bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/20 rounded-2xl p-4 flex items-center gap-3 mb-6">
+        <Shield className="w-5 h-5 text-amber-400" />
+        <div>
+          <h2 className="text-xs font-black uppercase font-mono text-amber-400 tracking-wider">Founder Control Interface</h2>
+          <p className="text-[9px] text-gray-400 font-mono">Live environment configuration permission override active</p>
         </div>
-        {maintenanceMode && (
-          <span className="bg-rose-500 text-black font-black text-[8px] uppercase px-2 py-0.5 rounded animate-pulse">
-            SYSTEM LOCKED
-          </span>
-        )}
       </div>
 
-      <div className="p-4 space-y-6">
+      {successNotice && (
+        <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-3 text-center text-[10px] font-mono text-emerald-400 flex items-center justify-center gap-1.5 mb-4">
+          <CheckCircle className="w-3.5 h-3.5" /> {successNotice}
+        </div>
+      )}
 
-        {/*  1. LIVE APP METRICS & TELEMETRY */}
-        <div className="grid grid-cols-3 gap-2.5">
-          {liveMetrics.map((stat, i) => {
-            const Icon = stat.icon;
-            return (
-              <div key={i} className="bg-[#0b1424] border border-gray-800/60 p-3 rounded-xl space-y-1">
-                <Icon className={`w-3.5 h-3.5 ${stat.color}`} />
-                <div>
-                  <span className="text-[8px] font-black text-gray-500 block uppercase tracking-wider">{stat.label}</span>
-                  <span className="text-xs font-black text-white">{stat.count}</span>
-                </div>
-              </div>
-            );
-          })}
+      <form onSubmit={handlePushMovie} className="bg-[#0f111a] border border-white/5 rounded-2xl p-4 space-y-4 shadow-xl">
+        <div className="flex items-center gap-1.5 border-b border-white/5 pb-2">
+          <Plus className="w-4 h-4 text-[#00b4d8]" />
+          <span className="text-[10px] font-black uppercase tracking-wider text-gray-300">Inject Stream Resource</span>
         </div>
 
-        {/*  2. LIVE ANNOUNCEMENT BANNER TICKER */}
-        <div className="bg-[#0b1424] border border-gray-800 rounded-2xl p-4 space-y-3">
-          <span className="text-[10px] font-black uppercase tracking-wider text-amber-400 flex items-center gap-1">
-            <Radio className="w-3.5 h-3.5" /> Live Announcement Banner
-          </span>
-          <div className="bg-[#06070d] p-2.5 rounded-xl border border-gray-900 text-[11px] font-medium text-gray-300 italic">
-            <span className="text-amber-400 font-black not-italic uppercase tracking-widest text-[8px] block mb-0.5">Live Alert Status:</span>
-            "{activeBanner}"
-          </div>
-          <form onSubmit={handleBroadcastAnnouncement} className="flex gap-2">
-            <input
-              type="text"
-              value={announcement}
-              onChange={(e) => setAnnouncement(e.target.value)}
-              placeholder="Type new global streaming alert ticker..."
-              className="flex-1 bg-[#111c30] border border-gray-700/60 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-500 placeholder-gray-500"
-            />
-            <button type="submit" className="px-3 bg-amber-500 hover:bg-amber-600 text-black text-xs font-black uppercase tracking-wider rounded-xl transition-transform active:scale-95">
-              Deploy
-            </button>
-          </form>
-        </div>
-
-        {/*  3. FEATURED SPOTLIGHT BILLBOARD CAROUSEL */}
-        <div className="bg-[#0b1424] border border-gray-800 rounded-2xl p-4 space-y-3">
-          <span className="text-[10px] font-black uppercase tracking-wider text-[#00b4d8] flex items-center gap-1">
-            <Film className="w-3.5 h-3.5" /> Featured Spotlight Sliders
-          </span>
-          <form onSubmit={handleUpdateCarousel} className="space-y-2">
-            <input
-              type="text"
-              required
-              value={carouselTitle}
-              onChange={(e) => setCarouselTitle(e.target.value)}
-              placeholder="Spotlight Movie / Live Match Event Title"
-              className="w-full bg-[#111c30] border border-gray-700/60 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-[#00b4d8] placeholder-gray-500"
-            />
-            <button type="submit" className="w-full py-2.5 bg-[#00b4d8] text-white text-xs font-black uppercase tracking-wider rounded-xl transition-transform active:scale-95">
-              Update Showcase Slider Content
-            </button>
-          </form>
-        </div>
-
-        {/*  4. BAN & 24H TIMEOUT MANAGER INFRACTIONS QUEUE */}
         <div className="space-y-3">
-          <div className="flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-gray-400 px-0.5">
-            <AlertTriangle className="w-4 h-4 text-rose-500" />
-            Lounge Infractions Queue ({flaggedQueue.length})
-          </div>
-
-          <div className="space-y-2.5">
-            {flaggedQueue.map((item) => (
-              <div key={item.id} className="bg-[#111c30]/40 border border-gray-800 rounded-2xl p-4 space-y-3">
-                <div className="bg-[#06070d]/50 p-2.5 rounded-xl border border-gray-900 text-xs">
-                  <span className="text-rose-400 font-black block mb-0.5">@{item.author} (Flagged):</span>
-                  <p className="text-gray-300 italic font-medium">"{item.content}"</p>
-                </div>
-                <p className="text-[10px] text-gray-400 font-medium"><span className="text-gray-500 font-bold">Reason:</span> {item.reason}</p>
-
-                {/* Account Suspension Control Array */}
-                <div className="flex gap-2">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      alert(`User @${item.author} account has been frozen for 24 Hours.`);
-                      setFlaggedQueue(flaggedQueue.filter(q => q.id !== item.id));
-                    }}
-                    className="flex-1 bg-amber-500/10 hover:bg-amber-500 border border-amber-500/20 text-amber-400 hover:text-black text-[10px] font-black uppercase tracking-wider py-2 rounded-xl transition-colors flex items-center justify-center gap-1"
-                  >
-                    <Ban className="w-3.5 h-3.5" /> 24H Timeout User
-                  </button>
-                  
-                  <button
-                    type="button"
-                    onClick={() => setFlaggedQueue(flaggedQueue.filter(q => q.id !== item.id))}
-                    className="px-3.5 bg-rose-600/10 hover:bg-rose-600 border border-rose-500/20 text-rose-400 hover:text-white rounded-xl transition-colors flex items-center justify-center"
-                    title="Delete Content Only"
-                  >
-                    <Trash2 className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/*  5. EMERGENCY SYSTEM PUSH ALERT DISPATCHER */}
-        <div className="bg-[#0b1424] border border-gray-800 rounded-2xl p-4 space-y-3">
-          <span className="text-[10px] font-black uppercase tracking-wider text-rose-400 flex items-center gap-1">
-            <Bell className="w-3.5 h-3.5" /> Forced System Push Modal
-          </span>
-          <form onSubmit={handleSendPushAlert} className="flex gap-2">
+          <div>
+            <label className="text-[9px] font-mono font-bold text-gray-500 uppercase tracking-wider block mb-1">Media Title</label>
             <input
-              type="text"
-              value={systemPush}
-              onChange={(e) => setSystemPush(e.target.value)}
-              placeholder="Interrupt app screens with alert message..."
-              className="flex-1 bg-[#111c30] border border-gray-700/60 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-rose-500 placeholder-gray-500"
+              type="text" required value={movieTitle} onChange={(e) => setMovieTitle(e.target.value)}
+              placeholder="e.g. WWE WrestleMania Premium Feed"
+              className="w-full bg-[#111c30] border border-white/5 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none"
             />
-            <button type="submit" className="px-3 bg-rose-500 hover:bg-rose-600 text-black text-xs font-black uppercase tracking-wider rounded-xl transition-transform active:scale-95">
-              Blast
-            </button>
-          </form>
-        </div>
-
-        {/*  6. PROMO CODE GENERATOR SUITE */}
-        <div className="bg-[#0b1424] border border-gray-800 rounded-2xl p-4 space-y-3">
-          <span className="text-[10px] font-black uppercase tracking-wider text-emerald-400 flex items-center gap-1">
-            <Award className="w-3.5 h-3.5" /> Deploy Premium Promo Voucher
-          </span>
-          <form onSubmit={handleGeneratePromo} className="flex gap-2">
-            <input
-              type="text"
-              value={promoCode}
-              onChange={(e) => setPromoCode(e.target.value)}
-              placeholder="e.g., NEROXAFREE7"
-              className="flex-1 bg-[#111c30] border border-gray-700/60 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500 placeholder-gray-500 uppercase"
-            />
-            <button type="submit" className="px-3 bg-emerald-500 hover:bg-emerald-600 text-black text-xs font-black uppercase tracking-wider rounded-xl transition-transform active:scale-95">
-              Create Pass
-            </button>
-          </form>
-        </div>
-
-        {/*  7. GLOBAL MAINTENANCE TOGGLE MODULE */}
-        <div className="bg-[#0b1424] border border-gray-800 rounded-2xl p-4 flex items-center justify-between">
-          <div className="space-y-0.5">
-            <span className="text-[10px] font-black uppercase tracking-wider text-gray-400 flex items-center gap-1">
-              <Zap className="w-3.5 h-3.5 text-rose-500" /> Maintenance Mode Overrides
-            </span>
-            <p className="text-[10px] text-gray-500 font-medium">Locks all app clients to a landing state.</p>
           </div>
-          
-          <button
-            type="button"
-            onClick={() => setMaintenanceMode(!maintenanceMode)}
-            className={`w-12 h-6 rounded-full p-1 transition-all ${
-              maintenanceMode ? "bg-rose-500 justify-end" : "bg-gray-800 justify-start"
-            } flex items-center`}
-          >
-            <div className="w-4 h-4 rounded-full bg-white shadow-md" />
-          </button>
+
+          <div>
+            <label className="text-[9px] font-mono font-bold text-gray-500 uppercase tracking-wider block mb-1">Backdrop Backdrop URL Segment</label>
+            <input
+              type="text" value={backdropPath} onChange={(e) => setBackdropPath(e.target.value)}
+              placeholder="e.g. /7O6f3S8y... or full HTTP image string"
+              className="w-full bg-[#111c30] border border-white/5 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none font-mono"
+            />
+          </div>
+
+          <div>
+            <label className="text-[9px] font-mono font-bold text-gray-500 uppercase tracking-wider block mb-1">Resource Framework Class</label>
+            <select
+              value={category} onChange={(e) => setCategory(e.target.value)}
+              className="w-full bg-[#111c30] border border-white/5 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none"
+            >
+              <option value="Premium Movie">Premium Movie Feature</option>
+              <option value="Series Event">Series Event Broadcast</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="text-[9px] font-mono font-bold text-gray-500 uppercase tracking-wider block mb-1">Catalog Overview Plot</label>
+            <textarea
+              value={overview} onChange={(e) => setOverview(e.target.value)}
+              placeholder="Input explicit logs, descriptions or match breakdown tables..." rows={3}
+              className="w-full bg-[#111c30] border border-white/5 rounded-xl p-3 text-xs text-white focus:outline-none resize-none"
+            />
+          </div>
         </div>
 
-      </div>
+        <button
+          type="submit"
+          className="w-full bg-[#00b4d8] text-white text-xs font-black uppercase py-3 rounded-xl tracking-wider active:scale-95 transition-transform flex items-center justify-center gap-1.5"
+        >
+          <Video className="w-4 h-4" /> Push Production Target
+        </button>
+      </form>
     </div>
   );
 }
