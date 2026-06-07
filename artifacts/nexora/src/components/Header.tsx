@@ -9,7 +9,6 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({ onAuthClick, isLoggedIn }) => {
   const [scrolled, setScrolled] = useState(false);
 
-  // Monitor scrolling to turn header background pitch black when moving down
   React.useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 20) {
@@ -28,48 +27,53 @@ export const Header: React.FC<HeaderProps> = ({ onAuthClick, isLoggedIn }) => {
         scrolled ? 'bg-zinc-950/95 backdrop-blur-md shadow-lg shadow-black/50' : 'bg-gradient-to-b from-black/80 to-transparent'
       }`}
     >
-      {/* Left Section: Menu Burger & Glowing Film-Tape Logo */}
       <div className="flex items-center gap-4">
         <button className="text-zinc-400 hover:text-white transition cursor-pointer md:hidden">
           <Menu size={24} />
         </button>
 
         <a href="/" className="flex items-center gap-2 group">
-          {/* Custom Cinema Tape SVG Logo */}
+          {/* Custom Cinematic Tape-Formed Letter N Logo */}
           <svg
-            className="w-8 h-8 filter drop-shadow-[0_0_8px_rgba(6,182,212,0.8)] group-hover:drop-shadow-[0_0_14px_rgba(6,182,212,1)] transition-all duration-300"
+            className="w-9 h-9 filter drop-shadow-[0_0_8px_rgba(6,182,212,0.7)] group-hover:drop-shadow-[0_0_15px_rgba(6,182,212,1)] transition-all duration-300"
             viewBox="0 0 100 100"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
-            {/* Outer Cinema Tape Loop (The Circle Shape) */}
-            <circle
-              cx="50"
-              cy="50"
-              r="40"
-              stroke="currentColor"
-              strokeWidth="6"
-              className="text-cyan-500"
-              strokeDasharray="4 4" // This makes it look like the sprocket holes on a film tape strip!
-            />
-            {/* Inner Neon Ribbon folding into an 'N' */}
+            {/* The Cinematic Tape Strip Path curving beautifully to shape out an N */}
             <path
-              d="M35 70V30L65 70V30"
+              d="M25 75C25 75 20 50 25 25C27.5 12.5 45 20 45 35V65C45 80 52.5 87.5 65 75C75 65 75 25 75 25"
               stroke="currentColor"
               strokeWidth="8"
               strokeLinecap="round"
+              className="text-cyan-500"
+              strokeDasharray="120"
+              strokeDashoffset="0"
+            />
+            {/* Film sprocket track holes along the tape strip */}
+            <path
+              d="M25 75C25 75 20 50 25 25C27.5 12.5 45 20 45 35V65C45 80 52.5 87.5 65 75C75 65 75 25 75 25"
+              stroke="black"
+              strokeWidth="8"
+              strokeLinecap="round"
+              strokeDasharray="2 6"
+              className="opacity-40"
+            />
+            {/* Core high-contrast inner ribbon accent line */}
+            <path
+              d="M27 70V30L63 70V30"
+              stroke="white"
+              strokeWidth="4"
+              strokeLinecap="round"
               strokeLinejoin="round"
-              className="text-white"
             />
           </svg>
           
-          {/* Brand Name Text */}
           <span className="text-xl font-black tracking-tighter text-white">
             NEROXA<span className="text-cyan-500 font-bold">.</span>
           </span>
         </a>
 
-        {/* Desktop Navigation Links */}
         <nav className="hidden md:flex items-center gap-6 ml-6 text-sm font-medium text-zinc-400">
           <a href="/" className="text-white hover:text-white transition">Home</a>
           <a href="/movies" className="hover:text-white transition">Movies</a>
@@ -78,7 +82,6 @@ export const Header: React.FC<HeaderProps> = ({ onAuthClick, isLoggedIn }) => {
         </nav>
       </div>
 
-      {/* Right Section: System Actions */}
       <div className="flex items-center gap-4 text-zinc-300">
         <button className="hover:text-white transition cursor-pointer">
           <Search size={20} />
@@ -87,7 +90,6 @@ export const Header: React.FC<HeaderProps> = ({ onAuthClick, isLoggedIn }) => {
           <Bell size={20} />
         </button>
         
-        {/* Auth Interaction Trigger */}
         {isLoggedIn ? (
           <a 
             href="/profile" 
@@ -107,4 +109,3 @@ export const Header: React.FC<HeaderProps> = ({ onAuthClick, isLoggedIn }) => {
     </header>
   );
 };
-          
