@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Send, Cpu, Bot, User } from "lucide-react";
+import { Send, Cpu, Bot, User, Sparkles } from "lucide-react";
 
 interface Message {
   id: string;
@@ -13,10 +13,17 @@ export default function AIChat() {
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
+  
+  const backendUrl = "https://neroxa-app.onrender.com";
 
   useEffect(() => {
     setMessages([
-      { id: "ai-welcome", sender: "ai", text: "Nexora Core operational. I am your direct companion interface. Ask me anything about upcoming live streams, premium room controls, or theater configurations.", timestamp: "ONLINE" }
+      { 
+        id: "ai-initial", 
+        sender: "ai", 
+        text: "System initialized. I am your automated assistant interface. Ask me queries regarding active media pipelines, movie databases, or lounge privileges.", 
+        timestamp: "ONLINE" 
+      }
     ]);
   }, []);
 
@@ -24,41 +31,47 @@ export default function AIChat() {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const handleSend = (e: React.FormEvent) => {
+  const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim()) return;
 
-    const userMsg: Message = {
-      id: `u-${Date.now()}`,
+    const userMessage: Message = {
+      id: `user-${Date.now()}`,
       sender: "user",
       text: input.trim(),
-      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
     };
 
-    setMessages(prev => [...prev, userMsg]);
-    const query = input.toLowerCase();
+    setMessages((prev) => [...prev, userMessage]);
+    const promptToSend = input;
     setInput("");
     setIsTyping(true);
 
-    setTimeout(() => {
-      let reply = "Query logged. Checking system metrics and video index archives.";
+    try {
+      const res = await fetch(`${backendUrl}/api/ai/respond`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt: promptToSend })
+      });
+      const data = await res.json();
       
-      if (query.includes("movie") || query.includes("stream") || query.includes("show")) {
-        reply = "TMDB cluster synchronization verified. The home interface dashboard is pulling official cinematic catalogs directly from live servers.";
-      } else if (query.includes("hello") || query.includes("hi") || query.includes("hey")) {
-        reply = "Greetings. Connection matrix is secure. How can I assist with your streaming workflow requirements today?";
-      } else if (query.includes("admin") || query.includes("owner")) {
-        reply = "Founder access permissions detected. Group configuration headers and community voting widgets are ready in the Lounge corridor panel.";
-      }
-
-      setMessages(prev => [...prev, {
+      setMessages((prev) => [...prev, {
         id: `ai-${Date.now()}`,
         sender: "ai",
-        text: reply,
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        text: data.success ? data.response : "Error returning structured buffer from cluster configuration rules.",
+        timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
       }]);
+    } catch (err) {
+      console.error(err);
+      setMessages((prev) => [...prev, {
+        id: `ai-err-${Date.now()}`,
+        sender: "ai",
+        text: "Gateway timeout. Running edge lookup backup routines instead.",
+        timestamp: "SYSTEM"
+      }]);
+    } finally {
       setIsTyping(false);
-    }, 900);
+    }
   };
 
   return (
@@ -68,8 +81,10 @@ export default function AIChat() {
           <Cpu className="w-5 h-5 text-[#00b4d8]" />
         </div>
         <div>
-          <h2 className="text-xs font-black uppercase font-mono tracking-wider">NexaAI Assistant</h2>
-          <p className="text-[9px] text-emerald-400 font-mono">Operations Engine Secure</p>
+          <h2 className="text-xs font-black uppercase font-mono tracking-wider">NexaAI Engine</h2>
+          <p className="text-[9px] text-emerald-400 font-mono flex items-center gap-1">
+            <Sparkles className="w-2 h-2 animate-pulse" /> Core Infrastructure Valid
+          </p>
         </div>
       </div>
 
@@ -91,7 +106,8 @@ export default function AIChat() {
         ))}
         {isTyping && (
           <div className="flex gap-2 items-center text-gray-500 text-[10px] font-mono pl-1">
-            <span className="animate-pulse">Processing mainframe nodes...</span>
+            <div className="w-2 h-2 bg-[#00b4d8] rounded-full animate-ping" />
+            <span>Parsing node parameters...</span>
           </div>
         )}
         <div ref={endRef} />
@@ -102,7 +118,7 @@ export default function AIChat() {
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Ask NexaAI intelligence framework..."
+          placeholder="Ask NexaAI framework..."
           className="w-full bg-[#111c30] border border-white/10 rounded-xl pl-4 pr-12 py-3.5 text-xs text-white outline-none focus:border-[#00b4d8]/40 font-sans"
         />
         <button type="submit" className="absolute right-2 top-1/2 -translate-y-1/2 bg-[#00b4d8] p-2 rounded-lg text-white">
@@ -111,5 +127,4 @@ export default function AIChat() {
       </form>
     </div>
   );
-                  }
-      
+        }
