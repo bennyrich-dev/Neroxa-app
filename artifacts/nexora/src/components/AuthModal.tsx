@@ -61,7 +61,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess
       onClose();
     } catch (err: any) {
       setError(err.message);
-    } finaly {
+    } finally {
       setLoading(false);
     }
   };
@@ -185,4 +185,3 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess
     </div>
   );
 };
-              
