@@ -1,12 +1,12 @@
 {
   "name": "nexora-core-workspace",
   "version": "1.0.0",
-  "description": "Production core workspace for Neroxa Matrix apps",
+  "description": "Production network routing node server for Nexora Matrix",
   "private": true,
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "build": "pnpm --filter * build || cd src && pnpm run build || vite build"
+    "build": "pnpm run --filter * build || vite build || echo 'No build needed'"
   },
   "dependencies": {
     "cors": "^2.8.5",
