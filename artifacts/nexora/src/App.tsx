@@ -953,4 +953,35 @@ export default function App() {
           </div>
         </div>
       )}
-      
+
+      {/* COMPACT BOTTOM STICKY TASKBAR SHORTCUT SYSTEM FOR PHONE LAYOUTS */}
+      <div className="fixed bottom-0 left-0 right-0 z-50 bg-zinc-950/95 backdrop-blur-md border-t border-zinc-900 py-3.5 px-4 flex justify-around items-center md:hidden shadow-2xl">
+        <button onClick={() => { setTab('home'); setExpandedCategory(null); }} className={`flex flex-col items-center gap-1 bg-transparent border-none outline-none cursor-pointer p-0 transition ${currentTab === 'home' && !expandedCategory ? 'text-cyan-400' : 'text-zinc-500'}`}>
+          <Film size={18} />
+          <span className="text-[9px] font-black uppercase tracking-wider">Home</span>
+        </button>
+        <button onClick={() => setTab('ai-chat')} className={`flex flex-col items-center gap-1 bg-transparent border-none outline-none cursor-pointer p-0 transition ${currentTab === 'ai-chat' ? 'text-cyan-400' : 'text-zinc-500'}`}>
+          <MessageSquare size={18} />
+          <span className="text-[9px] font-black uppercase tracking-wider">AI Chat</span>
+        </button>
+        <button onClick={() => setTab('community')} className={`flex flex-col items-center gap-1 bg-transparent border-none outline-none cursor-pointer p-0 transition ${currentTab === 'community' ? 'text-cyan-400' : 'text-zinc-500'}`}>
+          <Layers size={18} />
+          <span className="text-[9px] font-black uppercase tracking-wider">Hub</span>
+        </button>
+        
+        {isAdmin && (
+          <button onClick={() => setTab('admin')} className={`flex flex-col items-center gap-1 bg-transparent border-none outline-none cursor-pointer p-0 transition ${currentTab === 'admin' ? 'text-cyan-400' : 'text-zinc-500'}`}>
+            <ShieldAlert size={18} />
+            <span className="text-[9px] font-black uppercase tracking-wider">Admin</span>
+          </button>
+        )}
+
+        <button onClick={() => setTab('profile')} className={`flex flex-col items-center gap-1 bg-transparent border-none outline-none cursor-pointer p-0 transition ${currentTab === 'profile' ? 'text-cyan-400' : 'text-zinc-500'}`}>
+          <User size={18} />
+          <span className="text-[9px] font-black uppercase tracking-wider">Account</span>
+        </button>
+      </div>
+
+    </div>
+  );
+}
