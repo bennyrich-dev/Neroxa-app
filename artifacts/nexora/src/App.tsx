@@ -953,5 +953,4 @@ export default function App() {
           </div>
         </div>
       )}
-
-      {/* Well i think this is all*/}
+      
