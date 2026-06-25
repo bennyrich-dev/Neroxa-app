@@ -1,0 +1,9 @@
+artifacts/
+.git/
+.v0/
+pnpm-workspace.yaml
+tsconfig.base.json
+replit.md
+server.js
+pnpm-lock.yaml
+node_modules/
