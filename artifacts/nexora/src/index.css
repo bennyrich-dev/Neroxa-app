@@ -67,7 +67,7 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
-/* LIGHT MODE - Enforce dark mode look anyway for consistency */
+/* PREMIUM DARK THEME - Production-Ready Streaming Platform */
 :root {
   color-scheme: dark;
   --button-outline: rgba(255,255,255, .10);
@@ -78,54 +78,75 @@
   --elevate-1: rgba(255,255,255, .04);
   --elevate-2: rgba(255,255,255, .09);
 
-  --background: 220 50% 5%;
-  --foreground: 0 0% 100%;
-  --border: 180 100% 50% / 0.2;
-  --card: 220 50% 8% / 0.6;
-  --card-foreground: 0 0% 100%;
-  --card-border: 180 100% 50% / 0.2;
-  --sidebar: 220 50% 8% / 0.6;
-  --sidebar-foreground: 0 0% 100%;
-  --sidebar-border: 180 100% 50% / 0.2;
-  --sidebar-primary: 180 100% 50%;
-  --sidebar-primary-foreground: 220 50% 5%;
-  --sidebar-accent: 180 100% 50% / 0.1;
-  --sidebar-accent-foreground: 0 0% 100%;
-  --sidebar-ring: 180 100% 50%;
-  --popover: 220 50% 8% / 0.9;
-  --popover-foreground: 0 0% 100%;
-  --popover-border: 180 100% 50% / 0.3;
-  --primary: 180 100% 50%;
-  --primary-foreground: 220 50% 5%;
-  --secondary: 180 100% 50% / 0.15;
-  --secondary-foreground: 0 0% 100%;
-  --muted: 220 30% 15%;
-  --muted-foreground: 220 20% 70%;
-  --accent: 180 100% 50% / 0.2;
-  --accent-foreground: 0 0% 100%;
-  --destructive: 0 100% 60%;
-  --destructive-foreground: 0 0% 100%;
-  --input: 180 100% 50% / 0.3;
-  --ring: 180 100% 50%;
-  --chart-1: 180 100% 50%;
-  --chart-2: 280 100% 60%;
-  --chart-3: 320 100% 60%;
-  --chart-4: 140 100% 60%;
-  --chart-5: 40 100% 60%;
+  /* Core Palette: Deep navy background with cyan primary */
+  --background: 222 40% 4%;
+  --foreground: 0 0% 98%;
+  --border: 180 90% 45% / 0.15;
+  
+  /* Card hierarchy for visual depth */
+  --card: 222 40% 10%;
+  --card-foreground: 0 0% 95%;
+  --card-border: 180 90% 45% / 0.2;
+  
+  --sidebar: 222 40% 9%;
+  --sidebar-foreground: 0 0% 95%;
+  --sidebar-border: 180 90% 45% / 0.15;
+  --sidebar-primary: 180 100% 48%;
+  --sidebar-primary-foreground: 222 40% 4%;
+  --sidebar-accent: 180 100% 48% / 0.15;
+  --sidebar-accent-foreground: 0 0% 98%;
+  --sidebar-ring: 180 100% 48%;
+  
+  --popover: 222 40% 11%;
+  --popover-foreground: 0 0% 95%;
+  --popover-border: 180 90% 45% / 0.25;
+  
+  /* Primary: Vibrant cyan for CTAs and highlights */
+  --primary: 180 100% 48%;
+  --primary-foreground: 222 40% 4%;
+  
+  /* Secondary: Subtle variant of primary for secondary actions */
+  --secondary: 180 90% 48% / 0.12;
+  --secondary-foreground: 0 0% 98%;
+  
+  /* Neutral grays for text hierarchy */
+  --muted: 222 30% 18%;
+  --muted-foreground: 222 15% 65%;
+  
+  /* Accent: Slightly different hue for variety */
+  --accent: 200 100% 50% / 0.18;
+  --accent-foreground: 0 0% 98%;
+  
+  /* Destructive actions */
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 98%;
+  
+  /* Form inputs */
+  --input: 180 100% 48% / 0.12;
+  --ring: 180 100% 48%;
+  
+  /* Chart colors for data visualization */
+  --chart-1: 180 100% 48%;
+  --chart-2: 271 100% 52%;
+  --chart-3: 321 100% 54%;
+  --chart-4: 141 100% 50%;
+  --chart-5: 41 100% 58%;
 
+  /* Typography */
   --app-font-sans: 'Outfit', sans-serif;
   --app-font-serif: Georgia, serif;
   --app-font-mono: Menlo, monospace;
-  --radius: 0.75rem;
+  --radius: 0.625rem;
 
-  --shadow-2xs: 0px 0px 5px 0px hsl(180 100% 50% / 0.1);
-  --shadow-xs: 0px 0px 10px 0px hsl(180 100% 50% / 0.2);
-  --shadow-sm: 0px 0px 15px 0px hsl(180 100% 50% / 0.3);
-  --shadow: 0px 0px 20px 0px hsl(180 100% 50% / 0.4);
-  --shadow-md: 0px 0px 25px 0px hsl(180 100% 50% / 0.5);
-  --shadow-lg: 0px 0px 30px 0px hsl(180 100% 50% / 0.6);
-  --shadow-xl: 0px 0px 40px 0px hsl(180 100% 50% / 0.8);
-  --shadow-2xl: 0px 0px 50px 0px hsl(180 100% 50% / 1);
+  /* Refined shadows with cyan glow for premium feel */
+  --shadow-2xs: 0px 2px 4px 0px rgba(0 0 0 / 0.3);
+  --shadow-xs: 0px 4px 8px 0px rgba(0 0 0 / 0.4);
+  --shadow-sm: 0px 8px 16px 0px rgba(0 0 0 / 0.5);
+  --shadow: 0px 12px 24px 0px rgba(0 0 0 / 0.6);
+  --shadow-md: 0px 16px 32px 0px hsl(180 100% 48% / 0.15);
+  --shadow-lg: 0px 24px 48px 0px hsl(180 100% 48% / 0.12);
+  --shadow-xl: 0px 32px 64px 0px hsl(180 100% 48% / 0.08);
+  --shadow-2xl: 0px 48px 96px 0px hsl(180 100% 48% / 0.05);
 
   --tracking-normal: 0em;
   --spacing: 0.25rem;
@@ -141,49 +162,55 @@
   --elevate-1: rgba(255,255,255, .04);
   --elevate-2: rgba(255,255,255, .09);
 
-  --background: 220 50% 5%;
-  --foreground: 0 0% 100%;
-  --border: 180 100% 50% / 0.2;
-  --card: 220 50% 8% / 0.6;
-  --card-foreground: 0 0% 100%;
-  --card-border: 180 100% 50% / 0.3;
-  --sidebar: 220 50% 8% / 0.6;
-  --sidebar-foreground: 0 0% 100%;
-  --sidebar-border: 180 100% 50% / 0.2;
-  --sidebar-primary: 180 100% 50%;
-  --sidebar-primary-foreground: 220 50% 5%;
-  --sidebar-accent: 180 100% 50% / 0.1;
-  --sidebar-accent-foreground: 0 0% 100%;
-  --sidebar-ring: 180 100% 50%;
-  --popover: 220 50% 8% / 0.9;
-  --popover-foreground: 0 0% 100%;
-  --popover-border: 180 100% 50% / 0.3;
-  --primary: 180 100% 50%;
-  --primary-foreground: 220 50% 5%;
-  --secondary: 180 100% 50% / 0.15;
-  --secondary-foreground: 0 0% 100%;
-  --muted: 220 30% 15%;
-  --muted-foreground: 220 20% 70%;
-  --accent: 180 100% 50% / 0.2;
-  --accent-foreground: 0 0% 100%;
-  --destructive: 0 100% 60%;
-  --destructive-foreground: 0 0% 100%;
-  --input: 180 100% 50% / 0.3;
-  --ring: 180 100% 50%;
-  --chart-1: 180 100% 50%;
-  --chart-2: 280 100% 60%;
-  --chart-3: 320 100% 60%;
-  --chart-4: 140 100% 60%;
-  --chart-5: 40 100% 60%;
+  /* Same as :root for consistent dark mode */
+  --background: 222 40% 4%;
+  --foreground: 0 0% 98%;
+  --border: 180 90% 45% / 0.15;
+  
+  --card: 222 40% 10%;
+  --card-foreground: 0 0% 95%;
+  --card-border: 180 90% 45% / 0.2;
+  
+  --sidebar: 222 40% 9%;
+  --sidebar-foreground: 0 0% 95%;
+  --sidebar-border: 180 90% 45% / 0.15;
+  --sidebar-primary: 180 100% 48%;
+  --sidebar-primary-foreground: 222 40% 4%;
+  --sidebar-accent: 180 100% 48% / 0.15;
+  --sidebar-accent-foreground: 0 0% 98%;
+  --sidebar-ring: 180 100% 48%;
+  
+  --popover: 222 40% 11%;
+  --popover-foreground: 0 0% 95%;
+  --popover-border: 180 90% 45% / 0.25;
+  
+  --primary: 180 100% 48%;
+  --primary-foreground: 222 40% 4%;
+  --secondary: 180 90% 48% / 0.12;
+  --secondary-foreground: 0 0% 98%;
+  --muted: 222 30% 18%;
+  --muted-foreground: 222 15% 65%;
+  --accent: 200 100% 50% / 0.18;
+  --accent-foreground: 0 0% 98%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 98%;
+  --input: 180 100% 48% / 0.12;
+  --ring: 180 100% 48%;
+  
+  --chart-1: 180 100% 48%;
+  --chart-2: 271 100% 52%;
+  --chart-3: 321 100% 54%;
+  --chart-4: 141 100% 50%;
+  --chart-5: 41 100% 58%;
 
-  --shadow-2xs: 0px 0px 5px 0px hsl(180 100% 50% / 0.1);
-  --shadow-xs: 0px 0px 10px 0px hsl(180 100% 50% / 0.2);
-  --shadow-sm: 0px 0px 15px 0px hsl(180 100% 50% / 0.3);
-  --shadow: 0px 0px 20px 0px hsl(180 100% 50% / 0.4);
-  --shadow-md: 0px 0px 25px 0px hsl(180 100% 50% / 0.5);
-  --shadow-lg: 0px 0px 30px 0px hsl(180 100% 50% / 0.6);
-  --shadow-xl: 0px 0px 40px 0px hsl(180 100% 50% / 0.8);
-  --shadow-2xl: 0px 0px 50px 0px hsl(180 100% 50% / 1);
+  --shadow-2xs: 0px 2px 4px 0px rgba(0 0 0 / 0.3);
+  --shadow-xs: 0px 4px 8px 0px rgba(0 0 0 / 0.4);
+  --shadow-sm: 0px 8px 16px 0px rgba(0 0 0 / 0.5);
+  --shadow: 0px 12px 24px 0px rgba(0 0 0 / 0.6);
+  --shadow-md: 0px 16px 32px 0px hsl(180 100% 48% / 0.15);
+  --shadow-lg: 0px 24px 48px 0px hsl(180 100% 48% / 0.12);
+  --shadow-xl: 0px 32px 64px 0px hsl(180 100% 48% / 0.08);
+  --shadow-2xl: 0px 48px 96px 0px hsl(180 100% 48% / 0.05);
 }
 
 @layer base {
@@ -196,16 +223,63 @@
   }
 }
 
+/* Glass morphism effect - premium material design */
 .glass-panel {
-  @apply bg-card/60 backdrop-blur-md border border-card-border shadow-md;
+  @apply bg-card/40 backdrop-blur-lg border border-card-border shadow-sm transition-all duration-300;
 }
 
+.glass-panel-elevated {
+  @apply bg-card/60 backdrop-blur-xl border border-card-border shadow-md;
+}
+
+/* Neon glow effects */
 .neon-glow {
-  @apply shadow-md hover:shadow-lg transition-shadow duration-300;
+  @apply shadow-md hover:shadow-lg transition-all duration-300;
+}
+
+.neon-glow-intense {
+  @apply shadow-lg hover:shadow-xl transition-all duration-300;
 }
 
 .neon-text {
-  text-shadow: 0 0 10px hsl(var(--primary) / 0.5);
+  text-shadow: 0 0 20px hsl(var(--primary) / 0.4), 0 0 40px hsl(var(--primary) / 0.2);
+}
+
+/* Hero Section - Featured content showcase */
+.hero-section {
+  @apply relative overflow-hidden rounded-xl bg-gradient-to-b from-primary/20 via-background to-background border border-primary/10;
+}
+
+.hero-overlay {
+  @apply absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent;
+}
+
+.hero-content {
+  @apply relative z-10;
+}
+
+/* Premium content cards */
+.content-card {
+  @apply bg-card border border-card-border rounded-lg overflow-hidden transition-all duration-300 hover:border-primary/50 hover:shadow-md;
+}
+
+.content-card:hover {
+  @apply bg-card/80;
+}
+
+/* Gradient text for titles */
+.gradient-text {
+  @apply bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent;
+}
+
+/* Smooth transitions */
+.smooth-fade {
+  @apply transition-all duration-300 ease-out;
+}
+
+/* Backdrop blur backgrounds */
+.backdrop-blur-premium {
+  @apply backdrop-blur-xl backdrop-saturate-150;
 }
 
 /**

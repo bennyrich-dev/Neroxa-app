@@ -36,12 +36,12 @@ export function Layout({ children }: { children: ReactNode }) {
       </header>
 
       {/* Main Content */}
-      <main className="pt-16 min-h-[calc(100vh-4rem)]">
+      <main className="pt-16 pb-20 md:pb-0 min-h-screen md:min-h-[calc(100vh-4rem)]">
         {children}
       </main>
       
       {/* Mobile Nav */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 glass-panel border-b-0 border-l-0 border-r-0 rounded-none h-16 flex items-center justify-around px-4">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 glass-panel-elevated border-b-0 border-l-0 border-r-0 rounded-none h-20 flex items-center justify-around px-4 border-t safe-area-inset-bottom">
         <MobileNavLink href="/" current={location} icon={<Home className="w-5 h-5" />} />
         <MobileNavLink href="/browse" current={location} icon={<Compass className="w-5 h-5" />} />
         <MobileNavLink href="/search" current={location} icon={<Search className="w-5 h-5" />} />
@@ -73,8 +73,8 @@ function MobileNavLink({ href, current, icon }: { href: string; current: string;
     <Link 
       href={href} 
       className={cn(
-        "flex flex-col items-center justify-center w-12 h-12 rounded-full transition-all",
-        active ? "text-primary bg-primary/10 neon-glow" : "text-muted-foreground"
+        "flex flex-col items-center justify-center min-h-14 min-w-14 rounded-lg transition-all smooth-fade",
+        active ? "text-primary bg-primary/15 shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-muted/20"
       )}
     >
       {icon}
